@@ -10,10 +10,10 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  TablePagination,
   Chip,
   Alert,
   CircularProgress,
+  Button,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -21,6 +21,8 @@ import {
   Person as PersonIcon,
   CreditCard as CreditCardIcon,
   Refresh as RefreshIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -60,8 +62,8 @@ const DashboardPage = () => {
   ) => {
     if (newView !== null) {
       setViewMode(newView);
-      setPage(0); // Reset page when changing view
-      setSearchTerm(''); // Clear search
+      setPage(0);
+      setSearchTerm('');
     }
   };
 
@@ -73,7 +75,6 @@ const DashboardPage = () => {
 
     const term = searchTerm.toLowerCase();
     return data.filter((item: any) => {
-      // Search in profile fields
       if (viewMode === 'profiles') {
         return (
           item.name?.toLowerCase().includes(term) ||
@@ -81,7 +82,6 @@ const DashboardPage = () => {
           item.country?.toLowerCase().includes(term)
         );
       }
-      // Search in credit card fields
       return (
         item.card_number?.toLowerCase().includes(term) ||
         item.card_provider?.toLowerCase().includes(term) ||
@@ -90,77 +90,62 @@ const DashboardPage = () => {
     });
   }, [viewMode, profilesData, creditCardsData, searchTerm]);
 
-  // Paginate data
-  const paginatedData = useMemo(() => {
-    const startIndex = page * rowsPerPage;
-    return filteredData.slice(startIndex, startIndex + rowsPerPage);
-  }, [filteredData, page, rowsPerPage]);
-
   // Profile columns
-const profileColumns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 80 },
-  { field: 'name', headerName: 'Name', width: 180, flex: 1 },
-  { field: 'email', headerName: 'Email', width: 220, flex: 1 },
-  { field: 'country', headerName: 'Country', width: 120 },
-  {
-    field: 'documents',
-    headerName: 'Documents',
-    width: 200,
-    renderCell: (params: any) => (
-      <Box className="flex flex-wrap gap-1">
-        {params.value?.aadhar && <Chip label="Aadhar" size="small" className="bg-nova-success-100 text-nova-success-600" />}
-        {params.value?.dl && <Chip label="DL" size="small" className="bg-nova-primary-100 text-nova-primary-600" />}
-        {params.value?.pan && <Chip label="PAN" size="small" className="bg-nova-secondary-100 text-nova-secondary-600" />}
-        {params.value?.passport && <Chip label="Passport" size="small" className="bg-nova-accent-100 text-nova-accent-600" />}
-      </Box>
-    ),
-  },
-  { field: 'createdAt', headerName: 'Created', width: 120 },
-];
+  const profileColumns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 80 },
+    { field: 'name', headerName: 'Name', width: 180, flex: 1 },
+    { field: 'email', headerName: 'Email', width: 220, flex: 1 },
+    { field: 'country', headerName: 'Country', width: 120 },
+    {
+      field: 'documents',
+      headerName: 'Documents',
+      width: 200,
+      renderCell: (params: any) => (
+        <Box className="flex flex-wrap gap-1">
+          {params.value?.aadhar && <Chip label="Aadhar" size="small" className="bg-nova-success-100 text-nova-success-600" />}
+          {params.value?.dl && <Chip label="DL" size="small" className="bg-nova-primary-100 text-nova-primary-600" />}
+          {params.value?.pan && <Chip label="PAN" size="small" className="bg-nova-secondary-100 text-nova-secondary-600" />}
+          {params.value?.passport && <Chip label="Passport" size="small" className="bg-nova-accent-100 text-nova-accent-600" />}
+        </Box>
+      ),
+    },
+    { field: 'createdAt', headerName: 'Created', width: 120 },
+  ];
 
   // Credit card columns
-const creditCardColumns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 80 },
-  { 
-    field: 'card_number', 
-    headerName: 'Card Number', 
-    width: 200,
-    renderCell: (params: any) => (
-      <Typography className="font-mono">
-        **** **** **** {params.value?.slice(-4) || '0000'}
-      </Typography>
-    ),
-  },
-  { field: 'card_provider', headerName: 'Provider', width: 120 },
-  { 
-    field: 'card_type', 
-    headerName: 'Type', 
-    width: 100,
-    renderCell: (params: any) => (
-      <Chip 
-        label={params.value} 
-        size="small" 
-        className={`${
-          params.value === 'Credit' 
-            ? 'bg-nova-primary-100 text-nova-primary-600' 
-            : 'bg-nova-secondary-100 text-nova-secondary-600'
-        }`}
-      />
-    ),
-  },
-  { field: 'card_holder', headerName: 'Holder', width: 180, flex: 1 },
-  { field: 'card_expiry', headerName: 'Expiry', width: 100 },
-  { field: 'cvv', headerName: 'CVV', width: 80 },
-];
-  // Handle pagination
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  const creditCardColumns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 80 },
+    { 
+      field: 'card_number', 
+      headerName: 'Card Number', 
+      width: 200,
+      renderCell: (params: any) => (
+        <Typography className="font-mono">
+          **** **** **** {params.value?.slice(-4) || '0000'}
+        </Typography>
+      ),
+    },
+    { field: 'card_provider', headerName: 'Provider', width: 120 },
+    { 
+      field: 'card_type', 
+      headerName: 'Type', 
+      width: 100,
+      renderCell: (params: any) => (
+        <Chip 
+          label={params.value} 
+          size="small" 
+          className={`${
+            params.value === 'Credit' 
+              ? 'bg-nova-primary-100 text-nova-primary-600' 
+              : 'bg-nova-secondary-100 text-nova-secondary-600'
+          }`}
+        />
+      ),
+    },
+    { field: 'card_holder', headerName: 'Holder', width: 180, flex: 1 },
+    { field: 'card_expiry', headerName: 'Expiry', width: 100 },
+    { field: 'cvv', headerName: 'CVV', width: 80 },
+  ];
 
   // Clear search
   const handleClearSearch = () => {
@@ -239,10 +224,10 @@ const creditCardColumns: GridColDef[] = [
           <Box className="flex items-center justify-between">
             <Box>
               <Typography variant="h4" fontWeight="bold" className="text-nova-gray-500">
-                {paginatedData.length}
+                {Math.min(rowsPerPage, filteredData.length)}
               </Typography>
               <Typography variant="body2" className="text-nova-gray-600">
-                Showing Now
+                Per Page
               </Typography>
             </Box>
             <RefreshIcon className="text-nova-gray-400" sx={{ fontSize: 40 }} />
@@ -253,7 +238,6 @@ const creditCardColumns: GridColDef[] = [
       {/* Controls Section */}
       <Paper className="p-6 rounded-nova border border-nova-gray-200 mb-6">
         <Box className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          {/* Toggle Buttons */}
           <ToggleButtonGroup
             value={viewMode}
             exclusive
@@ -277,7 +261,6 @@ const creditCardColumns: GridColDef[] = [
             </ToggleButton>
           </ToggleButtonGroup>
 
-          {/* Search and Refresh */}
           <Box className="flex flex-col sm:flex-row gap-4">
             <TextField
               placeholder={`Search ${viewMode === 'profiles' ? 'profiles' : 'credit cards'}...`}
@@ -314,7 +297,6 @@ const creditCardColumns: GridColDef[] = [
 
       {/* Data Table Section */}
       <Paper className="rounded-nova border border-nova-gray-200 overflow-hidden">
-        {/* Error/Empty States */}
         {error && (
           <Alert severity="error" className="m-4">
             Failed to load {viewMode === 'profiles' ? 'profiles' : 'credit cards'}. Please try again.
@@ -333,7 +315,6 @@ const creditCardColumns: GridColDef[] = [
           </Box>
         )}
 
-        {/* Loading State */}
         {isLoading && (
           <Box className="p-12 text-center">
             <CircularProgress className="text-nova-primary-500" />
@@ -343,49 +324,68 @@ const creditCardColumns: GridColDef[] = [
           </Box>
         )}
 
-        {/* Data Grid */}
         {!isLoading && !error && filteredData.length > 0 && (
           <>
             <Box className="h-[500px]">
-          <DataGrid
-  rows={paginatedData}
-  columns={viewMode === 'profiles' ? profileColumns : creditCardColumns}
-  pageSizeOptions={[PAGE_SIZE, 20, 50]}
-  paginationModel={{ page, pageSize: rowsPerPage }}
-  onPaginationModelChange={(model: { page: number; pageSize: number }) => {
-    setPage(model.page);
-    setRowsPerPage(model.pageSize);
-  }}
-  className="border-0"
-  sx={{
-    '& .MuiDataGrid-cell:focus': { outline: 'none' },
-    '& .MuiDataGrid-columnHeaders': {
-      backgroundColor: 'var(--color-nova-gray-50)',
-      borderBottom: '2px solid var(--color-nova-gray-200)',
-    },
-    '& .MuiDataGrid-row:hover': {
-      backgroundColor: 'var(--color-nova-gray-50)',
-    },
-  }}
-/>
+              <DataGrid
+                rows={filteredData}
+                columns={viewMode === 'profiles' ? profileColumns : creditCardColumns}
+                getRowId={(row) => row.id || row.aadhar || row.card_number || Math.random()}
+                paginationMode="server"
+                rowCount={filteredData.length}
+                pageSizeOptions={[10, 20, 50]}
+                paginationModel={{ page, pageSize: rowsPerPage }}
+                onPaginationModelChange={(model: { page: number; pageSize: number }) => {
+                  setPage(model.page);
+                  setRowsPerPage(model.pageSize);
+                }}
+                className="border-0"
+                sx={{
+                  '& .MuiDataGrid-cell:focus': { outline: 'none' },
+                  '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: 'var(--color-nova-gray-50)',
+                    borderBottom: '2px solid var(--color-nova-gray-200)',
+                  },
+                  '& .MuiDataGrid-row:hover': {
+                    backgroundColor: 'var(--color-nova-gray-50)',
+                  },
+                }}
+              />
             </Box>
 
-            {/* Custom Pagination */}
-            <Box className="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-nova-gray-200">
-              <Typography variant="body2" className="text-nova-gray-600 mb-2 sm:mb-0">
-                Showing {page * rowsPerPage + 1} to {Math.min((page + 1) * rowsPerPage, filteredData.length)} of {filteredData.length} entries
+            {/* Single Clean Footer */}
+            <Box className="flex items-center justify-between p-4 border-t border-nova-gray-200 bg-white">
+              <Typography variant="body2" className="text-nova-gray-600">
+                Total: {filteredData.length} items
               </Typography>
               
-              <TablePagination
-                component="div"
-                count={filteredData.length}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[10, 20, 50]}
-                className="[&>.MuiTablePagination-spacer]:hidden"
-              />
+              <Box className="flex items-center gap-2">
+                <Button
+                  size="small"
+                  startIcon={<ChevronLeftIcon />}
+                  onClick={() => setPage(prev => Math.max(0, prev - 1))}
+                  disabled={page === 0}
+                  className="border-nova-gray-300 text-nova-gray-700"
+                >
+                  Previous
+                </Button>
+                
+                <Typography variant="body2" className="text-nova-gray-700">
+                  Page {page + 1} of {Math.ceil(filteredData.length / rowsPerPage)}
+                </Typography>
+                
+                <Button
+                  size="small"
+                  endIcon={<ChevronRightIcon />}
+                  onClick={() => setPage(prev => 
+                    prev < Math.ceil(filteredData.length / rowsPerPage) - 1 ? prev + 1 : prev
+                  )}
+                  disabled={page >= Math.ceil(filteredData.length / rowsPerPage) - 1}
+                  className="border-nova-gray-300 text-nova-gray-700"
+                >
+                  Next
+                </Button>
+              </Box>
             </Box>
           </>
         )}

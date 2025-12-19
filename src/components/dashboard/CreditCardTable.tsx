@@ -6,14 +6,27 @@ import {
   Chip,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import type { GridColDef } from '@mui/x-data-grid';
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Search as SearchIcon } from '@mui/icons-material';
 import PaginationFooter from './PaginationFooter';
 
+// Defining the shape of the credit card data we expect from the API
+interface CreditCardData {
+  card_number: string;
+  card_provider: string;
+  digits: number;
+  card_type: string;
+  card_expiry: string;
+  cvv: string;
+  // Added 'serial' for display in the table
+  serial?: number;
+}
+
+// Component Props Interface - Replaced 'any' with proper types
 interface CreditCardTableProps {
-  data: any[];
+  data: CreditCardData[];
   isLoading: boolean;
-  error: any;
+  error: Error | null; // Using Error type instead of 'any'
   searchTerm: string;
   page: number;
   rowsPerPage: number;
@@ -31,13 +44,15 @@ const CreditCardTable = ({
   onPageChange,
   onRowsPerPageChange,
 }: CreditCardTableProps) => {
-  // Add serial numbers to data for display - FIXED
+  // Add serial numbers to the data for the table display
+  // This gives each row a unique number for easier reference
   const dataWithSerial = data.map((item, index) => ({
     ...item,
     serial: index + 1,
   }));
 
-  // Credit card table columns configuration
+  // Define the table columns for the DataGrid
+  // Using GridRenderCellParams for proper type checking in render functions
   const creditCardColumns: GridColDef[] = [
     { 
       field: 'serial', 
@@ -50,7 +65,8 @@ const CreditCardTable = ({
       field: 'card_number', 
       headerName: 'Card Number', 
       width: 150,
-      renderCell: (params: any) => (
+      // Show only the last 4 digits for security, masking the rest
+      renderCell: (params: GridRenderCellParams<CreditCardData, string>) => (
         <Typography className="font-mono text-sm">
           {params.value ? `**** **** **** ${params.value.slice(-4)}` : 'Invalid Card'}
         </Typography>
@@ -60,7 +76,7 @@ const CreditCardTable = ({
       field: 'card_provider', 
       headerName: 'Provider', 
       width: 100,
-      renderCell: (params: any) => (
+      renderCell: (params: GridRenderCellParams<CreditCardData, string>) => (
         <Typography className="capitalize">
           {params.value || 'Unknown'}
         </Typography>
@@ -77,10 +93,11 @@ const CreditCardTable = ({
       field: 'card_type', 
       headerName: 'Type', 
       width: 90,
-      renderCell: (params: any) => {
+      renderCell: (params: GridRenderCellParams<CreditCardData, string>) => {
         const cardType = params.value?.toLowerCase() || 'unknown';
         const isCredit = cardType === 'credit';
         
+        // Display credit cards in primary color, others in secondary
         return (
           <Chip 
             label={params.value?.toUpperCase() || 'UNKNOWN'} 
@@ -112,14 +129,14 @@ const CreditCardTable = ({
 
   return (
     <>
-      {/* Error State */}
+      {/* Show error message if API call fails */}
       {error && (
         <Alert severity="error" className="m-4">
           Failed to load credit cards. Please try again.
         </Alert>
       )}
 
-      {/* Empty State */}
+      {/* Show empty state when no cards are found */}
       {!isLoading && !error && data.length === 0 && (
         <Box className="p-12 text-center">
           <SearchIcon sx={{ fontSize: 60 }} className="text-nova-gray-300 mb-4" />
@@ -132,7 +149,7 @@ const CreditCardTable = ({
         </Box>
       )}
 
-      {/* Loading State */}
+      {/* Loading spinner when fetching data */}
       {isLoading && (
         <Box className="p-12 text-center">
           <CircularProgress className="text-nova-primary-500" />
@@ -142,7 +159,7 @@ const CreditCardTable = ({
         </Box>
       )}
 
-      {/* Data Grid */}
+      {/* Main table view when data is loaded successfully */}
       {!isLoading && !error && data.length > 0 && (
         <>
           <Box className="h-[500px]">
@@ -171,7 +188,7 @@ const CreditCardTable = ({
             />
           </Box>
 
-          {/* Pagination Footer */}
+          {/* Pagination controls at the bottom of the table */}
           <PaginationFooter
             data={data}
             page={page}

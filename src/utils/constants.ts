@@ -38,15 +38,3 @@ export const CREDIT_CARD_REQUEST_BODY = {
   count: 250,
   country_code: "en_IN"
 };
-
-// ===== TABLE COLUMNS =====
-// Profile: Use API-provided columns (no need to define)
-// Credit Card: Define our own (API doesn't provide)
-export const CREDIT_CARD_COLUMNS = [
-  { field: 'card_number', headerName: 'Card Number', width: 200 },
-  { field: 'card_provider', headerName: 'Provider', width: 120 },
-  { field: 'card_type', headerName: 'Type', width: 100 },
-  { field: 'card_expiry', headerName: 'Expiry', width: 120 },
-  { field: 'cvv', headerName: 'CVV', width: 100 },
-  { field: 'digits', headerName: 'Digits', width: 100 },
-];

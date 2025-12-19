@@ -15,16 +15,20 @@ import {
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
 
+// Props for the ControlsSection component
+// These control the toggle between profiles/credit cards and the search functionality
 interface ControlsSectionProps {
-  viewMode: 'profiles' | 'creditCards';
-  onViewChange: (mode: 'profiles' | 'creditCards') => void;
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-  onClearSearch: () => void;
-  profilesCount: number;
-  cardsCount: number;
+  viewMode: 'profiles' | 'creditCards';        // Current active view mode
+  onViewChange: (mode: 'profiles' | 'creditCards') => void;  // Called when view mode changes
+  searchTerm: string;                           // Current search input value
+  onSearchChange: (term: string) => void;       // Called when search input changes
+  onClearSearch: () => void;                    // Called to clear the search input
+  profilesCount: number;                        // Total number of profiles available
+  cardsCount: number;                           // Total number of credit cards available
 }
 
+// This component provides the control panel for the dashboard
+// It includes toggle buttons to switch between views and a search box for filtering data
 const ControlsSection = ({
   viewMode,
   onViewChange,
@@ -34,7 +38,8 @@ const ControlsSection = ({
   profilesCount,
   cardsCount,
 }: ControlsSectionProps) => {
-  // Handle toggle button change
+  // Handles when the user clicks on the toggle buttons
+  // Only changes if a valid button is clicked (not null)
   const handleToggleChange = (
     event: React.MouseEvent<HTMLElement>,
     newView: 'profiles' | 'creditCards' | null,
@@ -47,7 +52,7 @@ const ControlsSection = ({
   return (
     <Paper className="p-6 rounded-nova border border-nova-gray-200 mb-6">
       <Box className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        {/* Toggle Buttons - Switch between Profiles and Credit Cards */}
+        {/* Toggle Buttons Section - Left side of the controls */}
         <ToggleButtonGroup
           value={viewMode}
           exclusive
@@ -55,6 +60,7 @@ const ControlsSection = ({
           aria-label="view mode"
           className="h-12"
         >
+          {/* Profiles button - shows profile count */}
           <ToggleButton 
             value="profiles" 
             className={`px-6 ${viewMode === 'profiles' ? '!bg-nova-primary-500 !text-white' : ''}`}
@@ -62,6 +68,8 @@ const ControlsSection = ({
             <PersonIcon className="mr-2" />
             Profiles ({profilesCount})
           </ToggleButton>
+          
+          {/* Credit Cards button - shows card count */}
           <ToggleButton 
             value="creditCards" 
             className={`px-6 ${viewMode === 'creditCards' ? '!bg-nova-secondary-500 !text-white' : ''}`}
@@ -71,9 +79,9 @@ const ControlsSection = ({
           </ToggleButton>
         </ToggleButtonGroup>
 
-        {/* Search and Controls */}
+        {/* Search and Refresh Section - Right side of the controls */}
         <Box className="flex flex-col sm:flex-row gap-4">
-          {/* Search Input - Filters data in real-time */}
+          {/* Search input field with clear button when text is entered */}
           <TextField
             placeholder={`Search ${viewMode === 'profiles' ? 'profiles' : 'credit cards'}...`}
             value={searchTerm}
@@ -86,6 +94,7 @@ const ControlsSection = ({
                   <SearchIcon className="text-nova-gray-400" />
                 </InputAdornment>
               ),
+              // Show clear button only when there's text in the search box
               endAdornment: searchTerm && (
                 <InputAdornment position="end">
                   <IconButton size="small" onClick={onClearSearch}>
@@ -96,9 +105,9 @@ const ControlsSection = ({
             }}
           />
           
-          {/* Refresh Button - Re-fetches data from API */}
+          {/* Refresh button - reloads the page to fetch fresh data from APIs */}
           <IconButton
-            onClick={() => window.location.reload()} // Simple refresh for now
+            onClick={() => window.location.reload()}
             className="border border-nova-gray-300 hover:bg-nova-gray-50"
             title="Refresh data"
           >

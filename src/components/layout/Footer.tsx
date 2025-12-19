@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Divider } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();

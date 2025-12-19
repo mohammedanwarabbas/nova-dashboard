@@ -146,7 +146,6 @@ const NotFoundPage = () => {
           </Link>
         </Typography>
 
-        {/* Decorative Footer */}
         <Box className="mt-12 opacity-40">
           <Typography variant="caption" className="tracking-widest uppercase">
             Nova Dashboard • Systems Offline

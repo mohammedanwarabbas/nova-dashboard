@@ -33,10 +33,6 @@ const Navbar = () => {
     navigate(ROUTES.LOGIN);
   };
 
-  const handleLogin = () => {
-    navigate(ROUTES.LOGIN);
-  };
-
   const firstName = user?.name?.split(' ')[0] || 'User';
   const displayName = firstName.length > 12 
     ? `${firstName.substring(0, 10)}...` 

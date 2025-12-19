@@ -22,7 +22,7 @@ const UnauthorizedPage = () => {
           Your email is not authorized for this dashboard.
           Contact admin to get access.
         </Typography>
-
+  
         {/* Buttons */}
         <Box className="flex flex-col gap-3 w-full max-w-xs">
           <Button

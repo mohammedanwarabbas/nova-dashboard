@@ -34,7 +34,7 @@ const StatsCards = ({
           </Box>
           <PersonIcon className="text-nova-primary-300" sx={{ fontSize: 40 }} />
         </Box>
-      </Paper>
+      </Paper> 
 
       {/* Credit Cards Card */}
       <Paper className="p-6 rounded-nova border border-nova-gray-200 hover:shadow-nova transition-shadow">

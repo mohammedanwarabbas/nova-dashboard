@@ -1,74 +1,3 @@
-# Nova Dashboard - A modern, responsive dashboard application built with React, TypeScript, and Material-UI that displays profiles and credit card information from external APIs with authentication capabilities.
-
-## Tech Stack
-
-### Frontend Framework
-- **React 19** - Frontend library with TypeScript
-- **React Router DOM** - Client-side routing
-- **React Query (TanStack Query)** - Data fetching and state management
-
-### UI Components & Styling
-- **Material-UI (MUI)** - UI component library
-- **Tailwind CSS** - Utility-first CSS framework
-- **Emotion** - CSS-in-JS styling
-
-### Development Tools
-- **Vite** - Build tool and development server
-- **TypeScript** - Type safety
-- **ESLint** - Code linting
-
-### API & Authentication
-- **Axios** - HTTP client for API requests
-- **React OAuth Google** - Google authentication
-- **JWT Decode** - Token handling
-
-### Utilities
-- **date-fns** - Date manipulation
-- **@mui/x-data-grid** - Advanced data tables
-
-## Getting Started
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/mohammedanwarabbas/nova-dashboard.git
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd nova-dashboard
-   ```
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Set up environment variables:
-   Create a `.env` and file based on `.env.example` find below step to know how to generate VITE_GOOGLE_CLIENT_ID env variable
-
-5. generate Google Client ID for google signin
-    Go to Google Cloud Console
-    Create a new project or select existing one
-    Navigate to "APIs & Services" → "Credentials"
-    Click "Create Credentials" → "OAuth 2.0 Client IDs"
-    Set "Authorized JavaScript origins" to http://localhost:5173
-    Set "Authorized redirect URIs" to http://localhost:5173
-    Copy the Client ID to your .env file
-
-5. Run development server:
-   ```bash
-  npm run dev
-   ```
-
-7. Navigate to:
-   ```bash
-  http://localhost:5173
-   ```
-
-## Project Structure
-
-```
-nova-dashboard/
 .
 ├── .env.example
 ├── .env.local
@@ -132,4 +61,3 @@ nova-dashboard/
 └── vite.config.ts
 
 18 directories, 43 files
-```

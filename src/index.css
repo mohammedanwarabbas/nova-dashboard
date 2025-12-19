@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles - USE EXISTING CLASSES FROM YOUR CONFIG */
+@layer base {
+  body {
+    @apply bg-white text-nova-gray-900;
+  }
+}
+
+/* Custom components */
+@layer components {
+  .nova-btn-primary {
+    @apply bg-nova-primary-500 hover:bg-nova-primary-600 text-white font-semibold py-3 px-6 rounded-nova transition duration-200 shadow-nova hover:shadow-nova-lg;
+  }
+  
+  .nova-card {
+    @apply bg-white rounded-nova shadow-nova border border-nova-gray-200 p-6;
+  }
+  
+  .nova-input {
+    @apply bg-white border border-nova-gray-300 rounded-lg px-4 py-3 text-nova-gray-800 focus:outline-none focus:ring-2 focus:ring-nova-primary-500 focus:border-transparent;
+  }
+}
